@@ -38,7 +38,7 @@
             <i class="el-icon-s-home"></i>
             <span slot="title">系统首页</span>
           </el-menu-item>
-          <el-submenu>
+          <el-submenu index="1-2">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span slot="title">用户管理</span>

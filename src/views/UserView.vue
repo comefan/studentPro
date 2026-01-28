@@ -4,15 +4,24 @@
       <el-input
         placeholder="请输入用户名"
         size="medium"
-        v-model="searchText"
+        v-model="param.name"
         style="width: 200px; margin-right: 10px"
       ></el-input>
-      <el-button type="warning" size="mini">查询</el-button>
+      <el-input
+        placeholder="请输入手机号"
+        size="medium"
+        v-model="param.phone"
+        style="width: 200px; margin-right: 10px"
+      ></el-input>
+      <el-button type="warning" size="mini" @click="getTableData">查询</el-button>
+      <el-button type="danger" size="mini" @click="reset">重置</el-button>
       <el-button type="primary" size="mini">新增</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="date" label="日期"> </el-table-column>
       <el-table-column prop="name" label="姓名"> </el-table-column>
+      <el-table-column prop="sex" label="性别"> </el-table-column>
+      <el-table-column prop="age" label="年龄"> </el-table-column>
+      <el-table-column prop="phone" label="手机号"> </el-table-column>
       <el-table-column label="操作">
         <el-button type="primary" size="mini">编辑</el-button>
         <el-button type="danger" size="mini">删除</el-button>
@@ -22,9 +31,9 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage"
+        :current-page="param.pageNum"
         :page-sizes="[5, 10, 20, 40]"
-        :page-size="pageSize"
+        :page-size="param.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
       >
@@ -34,44 +43,51 @@
 </template>
 
 <script>
+import request from '@/utils/request';
+
 export default {
   data() {
     return {
-      searchText: "",
-      total: 40,
-      currentPage: 1,
-      pageSize: 5,
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "马红霞",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "马玉珍",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王宇",
-          address: "上海市普陀区金沙江路 1519 弄",
-        },
-        {
-          date: "2016-05-03",
-          name: "宋笑天",
-          address: "上海市普陀区金沙江路 1516 弄",
-        },
-      ],
+      total: 0,
+      tableData: [],
+      param:{
+        name:'',
+        phone:'',
+        pageNum:1,
+        pageSize:5
+      }
     };
   },
+  created() {
+    this.getTableData();
+  },
   methods: {
-    handleSizeChange(val) {
-      this.pageSize = val;
-      this.handleCurrentChange(this.currentPage);
+    getTableData() {
+      request.get('/user/all',{params:this.param}).then(res => {
+        if(res.code === '200') {
+          this.tableData = res.data.list;
+          this.total = res.data.total;
+          this.param.pageNum = res.data.pageNum;
+          this.param.pageSize = res.data.pageSize;
+        }else{
+          this.$message.error(res.msg);
+        }
+      })
     },
-    handleCurrentChange(val) {
-      this.currentPage = val;
+    reset() {
+      this.param.name = ''; 
+      this.param.phone = '';
+      this.param.pageNum = 1;
+      this.param.pageSize = 5;
+      this.getTableData();
+    },
+    handleSizeChange(pageSize) {
+      this.param.pageSize = pageSize;
+      this.getTableData();
+    },
+    handleCurrentChange(pageNum) {
+      this.param.pageNum = pageNum;
+      this.getTableData();
     },
   },
 };
