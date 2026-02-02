@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="margin-bottom: 20px">
+    <div>
       <el-input
         placeholder="请输入用户名"
         size="medium"
@@ -31,12 +31,12 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="block" style="margin-top: 20px">
+    <div class="block">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="param.pageNum"
-        :page-sizes="[5, 10, 20, 40]"
+        :page-sizes="[10, 20, 40]"
         :page-size="param.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
@@ -83,7 +83,7 @@ export default {
         name: "",
         phone: "",
         pageNum: 1,
-        pageSize: 5,
+        pageSize: 10,
       },
       dialogFormVisible: false,
       form: {
