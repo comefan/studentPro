@@ -5,6 +5,7 @@ import UserView from '../views/UserView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import Layout from '../views/Layout.vue'
+import BookView from '../views/BookView.vue'
 
 Vue.use(VueRouter)
 
@@ -23,6 +24,11 @@ const routes = [
         path: '/user',
         name: 'user',
         component: UserView
+      },
+      {
+        path: '/book',
+        name: 'book',
+        component: BookView
       },
     ]
   },
@@ -54,6 +60,7 @@ const router = new VueRouter({
 
 // 全局前置守卫
 router.beforeEach((to, from, next) => {
+  console.log('全局前置守卫',to.name)
   // 如果目标路由不是登录页或注册页
   if (to.name !== 'login' && to.name !== 'register') {
     // 检查是否有用户信息
