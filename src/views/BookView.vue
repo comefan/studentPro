@@ -18,13 +18,24 @@
       <el-button type="primary" size="mini" @click="dialogFormVisible = true;form={name:'',sex:'',age:'',phone:''}">新增</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%">
+      <el-table-column label="封面">
+        <template v-slot="scope">
+          <el-image 
+            style="width: 70px; height: 70px;border-radius: 50%;"
+            :src="scope.row.img" 
+            :preview-src-list="[scope.row.img]">
+          </el-image>
+        </template>
+      </el-table-column>
       <el-table-column prop="name" label="书名"> </el-table-column>
       <el-table-column prop="price" label="价格"> </el-table-column>
       <el-table-column prop="author" label="作者"> </el-table-column>
       <el-table-column prop="press" label="出版社"> </el-table-column>
+      
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="dialogFormVisible = true;form=scope.row">编辑</el-button>
+          <el-button type="primary" size="mini" @click="edit(scope.row)">编辑</el-button>
+          <el-button type="success" size="mini" @click="dload(scope.row.img)">下载</el-button>
           <el-popconfirm title="确定删除吗？" @confirm="deleteBook(scope.row)">
             <el-button slot="reference" type="danger" size="mini" style="margin-left: 10px">删除</el-button>
           </el-popconfirm>
@@ -57,6 +68,20 @@
           </el-form-item>
           <el-form-item label="出版社" :label-width="formLabelWidth">
             <el-input v-model="form.press" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="封面" :label-width="formLabelWidth">
+            <el-upload
+              class="upload-demo"
+              ref="upload"
+              :action="burl+'upload'"
+              :on-success="handleSuccess"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :file-list="fileList"
+              list-type="picture">
+              <el-button size="small" type="primary">点击上传</el-button>
+              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            </el-upload>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -92,6 +117,8 @@ export default {
         img: "",
       },
       formLabelWidth: "100px",
+      fileList: [],
+      burl:'http://localhost:8080/api/files/',
     };
   },
   created() {
@@ -116,6 +143,15 @@ export default {
       this.param.pageNum = 1;
       this.param.pageSize = 5;
       this.getTableData();
+    },
+    edit(row){
+      this.form = row;
+      // this.fileList = row.img ? [row.img] : [];
+      this.dialogFormVisible = true;
+      if(this.$refs.upload){
+        this.$refs.upload.clearFiles();
+      }
+      
     },
     handleSizeChange(pageSize) {
       this.param.pageSize = pageSize;
@@ -146,6 +182,18 @@ export default {
         }
       });
     },
+     handleRemove(file, fileList) {
+        console.log('删除',file,'---', fileList);
+      },
+      handlePreview(file) {
+        console.log('预览',file);
+      },
+      handleSuccess(res) {
+        this.form.img = this.burl+res.data;
+      },
+      dload(img){
+        location.href = img
+      }
   },
 };
 </script>
