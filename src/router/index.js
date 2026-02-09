@@ -6,6 +6,7 @@ import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import Layout from '../views/Layout.vue'
 import BookView from '../views/BookView.vue'
+import BookType from '../views/BookType.vue'
 
 Vue.use(VueRouter)
 
@@ -30,6 +31,11 @@ const routes = [
         name: 'book',
         component: BookView
       },
+      {
+        path: '/bookType',
+        name: 'bookType',
+        component: BookType
+      }
     ]
   },
   {
