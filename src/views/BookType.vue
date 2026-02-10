@@ -12,6 +12,14 @@
       <el-button type="info" size="mini" @click="deleteSelected">删除选中</el-button>
       <el-button type="primary" size="mini" @click="dialogFormVisible = true;form={name:'',description:''}">新增</el-button>
       <el-button type="primary" size="mini" @click="exportExcel">导出Excel</el-button>
+      <el-upload
+        class="upload"
+        action="http://localhost:8080/api/bookType/upload"
+        :limit="3"
+        :on-success="handleSuccess"
+        :show-file-list="false">
+        <el-button size="small" type="success">批量上传</el-button>
+      </el-upload>
     </div>
     <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange" ref="tableRef" :row-key="getRowKey">
       <el-table-column
@@ -36,7 +44,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="param.pageNum"
-        :page-sizes="[3, 20, 40]"
+        :page-sizes="[10, 20, 40]"
         :page-size="param.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
@@ -75,7 +83,7 @@ export default {
         name: "",
         description: "",
         pageNum: 1,
-        pageSize: 3,
+        pageSize: 10,
       },
       dialogFormVisible: false,
       form: {
@@ -175,7 +183,22 @@ export default {
     exportExcel() {
       const user = JSON.parse(localStorage.getItem("user"));
       location.href = "http://localhost:8080/api/bookType/exportExcel?token=" + user.token;
-    }
+    },
+    handleSuccess(res) {
+      if (res.code === "200") {
+        this.$message.success(res.msg);
+        this.getTableData();
+      } else {
+        this.$message.error(res.msg);
+      }
+    },
   },
 };
 </script>
+<style scoped>
+.upload {
+  margin-bottom: 10px;
+  display: inline-block;
+  margin-left: 10px;
+}
+</style>
