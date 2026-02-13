@@ -31,8 +31,8 @@
       <el-table-column prop="price" label="价格"> </el-table-column>
       <el-table-column prop="author" label="作者"> </el-table-column>
       <el-table-column prop="press" label="出版社"> </el-table-column>
-      
-      <el-table-column label="操作">
+      <el-table-column prop="bookTypeName" label="分类"> </el-table-column>
+      <el-table-column label="操作" width="250">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="edit(scope.row)">编辑</el-button>
           <el-button type="success" size="mini" @click="dload(scope.row.img)">下载</el-button>
@@ -69,6 +69,11 @@
           <el-form-item label="出版社" :label-width="formLabelWidth">
             <el-input v-model="form.press" autocomplete="off"></el-input>
           </el-form-item>
+          <el-form-item label="分类" :label-width="formLabelWidth">
+            <el-select v-model="form.bookTypeId" placeholder="请选择分类">
+              <el-option v-for="item in bookTypeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="封面" :label-width="formLabelWidth">
             <el-upload
               class="upload-demo"
@@ -83,6 +88,7 @@
               <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
             </el-upload>
           </el-form-item>
+          
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -115,14 +121,17 @@ export default {
         author: "",
         press: "",
         img: "",
+        bookTypeId: "",
       },
       formLabelWidth: "100px",
       fileList: [],
       burl:'http://localhost:8080/api/files/',
+      bookTypeList: [],
     };
   },
   created() {
     this.getTableData();
+    this.getBookTypeList();
   },
   methods: {
     getTableData() {
@@ -132,6 +141,15 @@ export default {
           this.total = res.data.total;
           this.param.pageNum = res.data.pageNum;
           this.param.pageSize = res.data.pageSize;
+        } else {
+          this.$message.error(res.msg);
+        }
+      });
+    },
+    getBookTypeList() {
+      request.get("/bookType").then((res) => {
+        if (res.code === "200") {
+          this.bookTypeList = res.data;
         } else {
           this.$message.error(res.msg);
         }
@@ -197,3 +215,6 @@ export default {
   },
 };
 </script>
+<style scoped>
+
+</style>
