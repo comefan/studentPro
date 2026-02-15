@@ -53,16 +53,6 @@
               <i class="el-icon-s-home"></i>
               <span slot="title">系统首页</span>
             </el-menu-item>
-            <el-submenu index="1-2">
-              <template slot="title">
-                <i class="el-icon-location"></i>
-                <span slot="title">用户管理</span>
-              </template>
-              <el-menu-item-group>
-                <el-menu-item index="/user">管理员信息</el-menu-item>
-                <el-menu-item index="1-2">用户信息</el-menu-item>
-              </el-menu-item-group>
-            </el-submenu>
             <el-submenu index="1-3">
               <template slot="title">
                 <i class="el-icon-s-claim"></i>
@@ -71,12 +61,23 @@
               <el-menu-item-group>
                 <el-menu-item index="/bookType">图书类型</el-menu-item>
                 <el-menu-item index="/book">图书信息</el-menu-item>
+                <el-menu-item index="/audit">请假审批</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-menu-item index="/about">
               <i class="el-icon-setting"></i>
               <span slot="title">信息管理</span>
             </el-menu-item>
+            <el-submenu index="1-2" v-if="user.roleCode === 'ROLE_ADMIN'">
+              <template slot="title">
+                <i class="el-icon-location"></i>
+                <span slot="title">组织管理</span>
+              </template>
+              <el-menu-item-group>
+                <el-menu-item index="/role">角色管理</el-menu-item>
+                <el-menu-item index="/user">用户信息</el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
           </el-menu>
         </el-aside>
         <el-main>

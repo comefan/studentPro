@@ -2,32 +2,29 @@
   <div>
     <div>
       <el-input
-        placeholder="请输入用户名"
+        placeholder="请输入请假缘由"
         size="medium"
         v-model="param.name"
         style="width: 200px; margin-right: 10px"
       ></el-input>
-      <el-input
-        placeholder="请输入手机号"
-        size="medium"
-        v-model="param.phone"
-        style="width: 200px; margin-right: 10px"
-      ></el-input>
       <el-button type="warning" size="mini" @click="getTableData">查询</el-button>
       <el-button type="danger" size="mini" @click="reset">重置</el-button>
-      <el-button type="primary" size="mini" @click="dialogFormVisible = true;form={name:'',sex:'',age:'',phone:''}">新增</el-button>
+      <el-button type="primary" size="mini" v-if="user.roleCode === 'ROLE_STUDENT'"
+        @click="dialogFormVisible = true;form={name:'',time:'',day:'',userId:'',state:'',reason:''}">新增</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="name" label="姓名"> </el-table-column>
-      <el-table-column prop="sex" label="性别"> </el-table-column>
-      <el-table-column prop="age" label="年龄"> </el-table-column>
-      <el-table-column prop="phone" label="手机号"> </el-table-column>
-      <el-table-column prop="roleName" label="角色"></el-table-column>
+      <el-table-column prop="name" label="请假缘由"> </el-table-column>
+      <el-table-column prop="time" label="请假时间"> </el-table-column>
+      <el-table-column prop="day" label="请假天数"> </el-table-column>
+      <el-table-column prop="userName" label="请假人"> </el-table-column>
+      <el-table-column prop="status" label="状态"></el-table-column>
+      <el-table-column prop="reason" label="审批意见"> </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="dialogFormVisible = true;form=scope.row">编辑</el-button>
+          <el-button type="success" size="mini" @click="dialogFormVisible = true;form=scope.row" v-if="user.roleCode === 'ROLE_TEACHER'">审批</el-button>
+          <el-button type="primary" size="mini" @click="dialogFormVisible = true;form=scope.row" v-if="user.roleCode === 'ROLE_STUDENT' || user.roleCode === 'ROLE_ADMIN'">编辑</el-button>
           <el-popconfirm title="确定删除吗？" @confirm="deleteUser(scope.row)">
-            <el-button slot="reference" type="danger" size="mini" style="margin-left: 10px">删除</el-button>
+            <el-button slot="reference" type="danger" size="mini" style="margin-left: 10px" v-if="user.roleCode === 'ROLE_STUDENT' || user.roleCode === 'ROLE_ADMIN'">删除</el-button>
           </el-popconfirm>
         </template>
       </el-table-column>
@@ -47,26 +44,28 @@
     <div>
       <el-dialog title="请填写信息" :visible.sync="dialogFormVisible" width="30%">
         <el-form :model="form">
-          <el-form-item label="姓名" :label-width="formLabelWidth">
+          <div v-if="user.roleCode === 'ROLE_STUDENT'">
+          <el-form-item label="请假缘由" :label-width="formLabelWidth">
             <el-input v-model="form.name" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="性别" :label-width="formLabelWidth">
-            <el-radio-group v-model="form.sex">
-              <el-radio label="男">男</el-radio>
-              <el-radio label="女">女</el-radio>
-            </el-radio-group>
+          <el-form-item label="请假时间" :label-width="formLabelWidth">
+            <el-date-picker v-model="form.time" value-format="yyyy-MM-dd" type="date" placeholder="选择日期"></el-date-picker>
           </el-form-item>
-          <el-form-item label="年龄" :label-width="formLabelWidth">
-            <el-input v-model="form.age" autocomplete="off"></el-input>
+          <el-form-item label="请假天数" :label-width="formLabelWidth">
+            <el-input v-model="form.day" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="手机号" :label-width="formLabelWidth">
-            <el-input v-model="form.phone" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="角色" :label-width="formLabelWidth">
-            <el-select v-model="form.roleCode" placeholder="请选择角色">
-              <el-option v-for="item in roleList" :key="item.code" :label="item.name" :value="item.code"></el-option>
-            </el-select>
-          </el-form-item>
+          </div>
+          <div v-if="user.roleCode === 'ROLE_TEACHER'">
+            <el-form-item label="审批状态" :label-width="formLabelWidth">
+              <el-radio-group v-model="form.status" size="medium">
+                <el-radio label="通过" border>通过</el-radio>
+                <el-radio label="拒绝" border>拒绝</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="审批意见" :label-width="formLabelWidth">
+              <el-input v-model="form.reason" autocomplete="off"></el-input>
+            </el-form-item>
+          </div>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -81,25 +80,29 @@
 import request from "@/utils/request";
 
 export default {
+  name: 'Audit',
   data() {
     return {
       total: 0,
       tableData: [],
       param: {
         name: "",
-        phone: "",
+        userId: "",
         pageNum: 1,
         pageSize: 10,
       },
       dialogFormVisible: false,
       form: {
         name: "",
-        sex: "",
-        age: "",
-        phone: "",
+        time: "",
+        day: "",
+        userId: "",
+        state: "",
+        reason: "",
       },
       formLabelWidth: "100px",
       roleList: [],
+      user: JSON.parse(localStorage.getItem("user")),
     };
   },
   created() {
@@ -108,7 +111,7 @@ export default {
   },
   methods: {
     getTableData() {
-      request.get("/user/all", { params: this.param }).then((res) => {
+      request.get("/audit/all", { params: this.param }).then((res) => {
         if (res.code === "200") {
           this.tableData = res.data.list;
           this.total = res.data.total;
@@ -130,7 +133,6 @@ export default {
     },
     reset() {
       this.param.name = "";
-      this.param.phone = "";
       this.param.pageNum = 1;
       this.param.pageSize = 5;
       this.getTableData();
@@ -144,7 +146,9 @@ export default {
       this.getTableData();
     },
     submitForm() {
-      request.post("/user", this.form).then((res) => {
+      if (!this.form.userId)
+        this.form.userId = JSON.parse(localStorage.getItem("user")).id;
+      request.post("/audit", this.form).then((res) => {
         if (res.code === "200") {
           this.$message.success(res.msg);
           this.dialogFormVisible = false;
@@ -155,7 +159,7 @@ export default {
       });
     },
     deleteUser(row) {
-      request.delete("/user/" + row.id).then((res) => {
+      request.delete("/audit/" + row.id).then((res) => {
         if (res.code === "200") {
           this.$message.success(res.msg);
           this.getTableData();

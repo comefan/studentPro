@@ -10,6 +10,9 @@
                 <el-form-item prop="password">
                     <el-input v-model="user.password" prefix-icon="el-icon-lock" style="width: 80%;" placeholder="请输入密码" type="password"></el-input>
                 </el-form-item>
+                <div class="register-link">
+                    已有账号？<el-link type="success" @click="$router.push({path:'/login'})">点击登录</el-link>
+                </div>
                 <el-form-item>
                     <el-button type="primary" @click="register">注册</el-button>
                 </el-form-item>
@@ -63,5 +66,12 @@ export default {
     bottom: 0;
     background: url('@/assets/pic/bg.png') no-repeat center center fixed;
     background-size: cover;
+}
+.register-link{
+    margin-top: -12px;
+    margin-right: 40px;
+    text-align: right;
+    font-size: 15px;
+    color: #67686c;
 }
 </style>
