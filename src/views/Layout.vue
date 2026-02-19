@@ -62,6 +62,8 @@
                 <el-menu-item index="/bookType">图书类型</el-menu-item>
                 <el-menu-item index="/book">图书信息</el-menu-item>
                 <el-menu-item index="/audit">请假审批</el-menu-item>
+                <el-menu-item index="/hotel">酒店信息</el-menu-item>
+                <el-menu-item index="/reserve">预约信息</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-menu-item index="/about">

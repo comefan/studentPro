@@ -9,6 +9,8 @@ import BookView from '../views/BookView.vue'
 import BookType from '../views/BookType.vue'
 import Role from '../views/Role.vue'
 import AuditView from '../views/AuditView.vue'
+import HotelView from '@/views/HotelView.vue'
+import ReserveView from '../views/ReserveView.vue'
 
 
 Vue.use(VueRouter)
@@ -48,6 +50,16 @@ const routes = [
         path: '/audit',
         name: 'audit',
         component: AuditView
+      },
+      {
+        path: '/hotel',
+        name: 'hotel',
+        component: HotelView
+      },
+      {
+        path: '/reserve',
+        name: 'reserve',
+        component: ReserveView
       },
     ]
   },
