@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <el-container>
-      <el-header style="background-color: #4c535a; height: 40px">
+      <el-header style="background-color: #4c535a; height: 55px">
         <img
           src="@/assets/logo.png"
           alt=""
@@ -73,11 +73,12 @@
             <el-submenu index="1-2" v-if="user.roleCode === 'ROLE_ADMIN'">
               <template slot="title">
                 <i class="el-icon-location"></i>
-                <span slot="title">组织管理</span>
+                <span slot="title">系统管理</span>
               </template>
               <el-menu-item-group>
                 <el-menu-item index="/role">角色管理</el-menu-item>
                 <el-menu-item index="/user">用户信息</el-menu-item>
+                <el-menu-item index="/log">日志信息</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
           </el-menu>
@@ -130,8 +131,8 @@ export default {
 }
 .header-right {
   float: right;
-  height: 40px;
-  line-height: 40px;
+  height: 55px;
+  line-height: 55px;
   margin-right: 20px;
   color: #fff;
   cursor: pointer;

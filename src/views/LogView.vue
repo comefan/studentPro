@@ -1,22 +1,20 @@
 <template>
   <div>
     <div>
-      <el-input
-        placeholder="请输入酒店名称"
-        size="medium"
-        v-model="param.name"
-        style="width: 200px; margin-right: 10px"
+      <el-input placeholder="请输入日志名称" size="medium" v-model="param.name" style="width: 200px; margin-right: 10px"
       ></el-input>
+      <el-input placeholder="请输入用户名称" size="medium" v-model="param.username" style="width: 200px; margin-right: 10px"></el-input>
       <el-button type="warning" size="mini" @click="getTableData">查询</el-button>
       <el-button type="danger" size="mini" @click="reset">重置</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="hotelName" label="酒店名称"> </el-table-column>
-      <el-table-column prop="userName" label="预定人员"> </el-table-column>
-      <el-table-column prop="time" label="预约时间"> </el-table-column>
+      <el-table-column prop="name" label="日志名称"> </el-table-column>
+      <el-table-column prop="username" label="用户名称"> </el-table-column>
+      <el-table-column prop="time" label="操作时间"> </el-table-column>
+      <el-table-column prop="ip" label="IP"> </el-table-column>
       <el-table-column label="操作" width="250">
         <template slot-scope="scope">
-          <el-popconfirm title="确定删除吗？" @confirm="deleteReserve(scope.row)">
+          <el-popconfirm title="确定删除吗？" @confirm="deleteLog(scope.row)">
             <el-button slot="reference" type="danger" size="mini" style="margin-left: 10px">删除</el-button>
           </el-popconfirm>
         </template>
@@ -41,7 +39,7 @@
 import request from "@/utils/request";
 
 export default {
-  name: "reserve",
+  name: "log",
   data() {
     return {
       total: 0,
@@ -52,9 +50,10 @@ export default {
         pageSize: 10,
       },
       form: {
-        hotelName: "", 
+        name: "", 
         userName: "",
         time: "",
+        ip: "",
       },
       formLabelWidth: "100px",
     };
@@ -64,7 +63,7 @@ export default {
   },
   methods: {
     getTableData() {
-      request.get("/reserve/all", { params: this.param }).then((res) => {
+      request.get("/log/all", { params: this.param }).then((res) => {
         if (res.code === "200") {
           this.tableData = res.data.list;
           this.total = res.data.total;
@@ -77,6 +76,7 @@ export default {
     },
     reset() {
       this.param.name = "";
+      this.param.username = "";
       this.param.pageNum = 1;
       this.param.pageSize = 5;
       this.getTableData();
@@ -89,8 +89,8 @@ export default {
       this.param.pageNum = pageNum;
       this.getTableData();
     },
-    deleteReserve(row) {
-      request.delete("/reserve/" + row.id).then((res) => {
+    deleteLog(row) {
+      request.delete("/log/" + row.id).then((res) => {
         if (res.code === "200") {
           this.$message.success(res.msg);
           this.getTableData();

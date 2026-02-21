@@ -11,6 +11,7 @@ import Role from '../views/Role.vue'
 import AuditView from '../views/AuditView.vue'
 import HotelView from '@/views/HotelView.vue'
 import ReserveView from '../views/ReserveView.vue'
+import LogView from '@/views/LogView.vue'
 
 
 Vue.use(VueRouter)
@@ -60,6 +61,11 @@ const routes = [
         path: '/reserve',
         name: 'reserve',
         component: ReserveView
+      },
+      {
+        path: '/log',
+        name: 'log',
+        component: LogView
       },
     ]
   },
