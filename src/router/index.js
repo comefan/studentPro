@@ -12,6 +12,7 @@ import AuditView from '../views/AuditView.vue'
 import HotelView from '@/views/HotelView.vue'
 import ReserveView from '../views/ReserveView.vue'
 import LogView from '@/views/LogView.vue'
+import NoticeView from '../views/NoticeView.vue'
 
 
 Vue.use(VueRouter)
@@ -67,15 +68,20 @@ const routes = [
         name: 'log',
         component: LogView
       },
+      {
+        path: '/about',
+        name: 'about',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+      },
+      {
+        path: '/notice',
+        name: 'notice',
+        component: NoticeView
+      },
     ]
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
     path: '/login',

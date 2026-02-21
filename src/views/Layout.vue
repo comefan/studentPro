@@ -64,15 +64,12 @@
                 <el-menu-item index="/audit">请假审批</el-menu-item>
                 <el-menu-item index="/hotel">酒店信息</el-menu-item>
                 <el-menu-item index="/reserve">预约信息</el-menu-item>
+                <el-menu-item index="/notice">系统公告</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
-            <el-menu-item index="/about">
-              <i class="el-icon-setting"></i>
-              <span slot="title">信息管理</span>
-            </el-menu-item>
             <el-submenu index="1-2" v-if="user.roleCode === 'ROLE_ADMIN'">
               <template slot="title">
-                <i class="el-icon-location"></i>
+                <i class="el-icon-setting"></i>
                 <span slot="title">系统管理</span>
               </template>
               <el-menu-item-group>
@@ -81,6 +78,10 @@
                 <el-menu-item index="/log">日志信息</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
+            <el-menu-item index="/about">
+              <i class="el-icon-location"></i>
+              <span slot="title">关于我们</span>
+            </el-menu-item>
           </el-menu>
         </el-aside>
         <el-main>
