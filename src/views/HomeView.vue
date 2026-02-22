@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <el-collapse v-model="activeName" accordion>
-      <el-collapse-item v-for="item in notices" :key="item.id" :title="item.name + ' ' + item.time" :name="item.id">
+      <el-collapse-item v-for="item in notices" :key="item.id" :title="item.name + '     ' + item.time" :name="item.id">
         <div>{{ item.content }}</div>
       </el-collapse-item>
       
